@@ -134,8 +134,6 @@ state.geom$name = as.character(state.geom$name)
 saveRDS(state.geom,"Data/state_geom.rds")
 
 # Join geocoordinates with CDC data
-
-
 cdcAnnualData <- left_join(cdcAnnualData,state.geom,by=c('State'='name'))
 cdcAnnualData <- cdcAnnualData %>% select(State,Year,Deaths,Population,Crude.Rate,Lat=latitude,Long=longitude)
 saveRDS(cdcAnnualData,"Data/cdcAnnualData.rds")
@@ -144,10 +142,7 @@ cdcMonthlyStateData <- cdcMonthlyStateData %>% select(State,YearMonth,Year,Month
 
 ```
 
-
-
 ### Exploration 
-
 
 ```{r exploreMonthly, echo=FALSE}
 str(cdcMonthlyStateData)
@@ -166,8 +161,6 @@ grp_state <- cdcMonthlyStateData %>% group_by(State,YearMonth)%>% select(State,Y
 
 tx <- filter(grp_state,State=="Texas")
 head(tx)
-
-
 ggplot(tx,aes(x=YearMonth, y=Deaths))+
   geom_point()  +
   ggtitle("Deaths attributed to opiods for the state of Texas","1999-2016")
@@ -176,8 +169,6 @@ ggplot(tx,aes(x=YearMonth, y=Deaths,group=1))+
   geom_line(stat="identity") +
   stat_smooth(method='loess') +
   ggtitle("Deaths attributed to opiods for the state of Texas","1999-2016")
-
-
 ```
 
 
@@ -195,9 +186,6 @@ ggplot(grp_us,aes(x=Year, y=Deaths,group=1))+
   geom_line() +
   stat_smooth(method="glm") +
   ggtitle("Deaths attributed to opiods in the United States","1999-2016")
-
-
-
 ```
 
 ```{r plotmap, echo=FALSE}
@@ -221,9 +209,7 @@ p <- ggplot(grp_state2, aes(map_id = State)) +
   theme(legend.position = "bottom", 
         panel.background = element_blank())
 
-
 p + fifty_states_inset_boxes() 
-
 ```
 
 
