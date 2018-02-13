@@ -1,0 +1,233 @@
+---
+title: "Days of Code Austin 2018"
+author: "Carlos Santillan"
+date: "February 10, 2018"
+output: html_document
+---
+# Analysis of Opiod drug overdoses data from the CDC
+
+
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+
+
+```{r libraries ,echo=FALSE, Warning=FALSE,message=FALSE}
+library(knitr)
+library(tidyverse)
+library(ggplot2)
+library(fiftystater)
+
+data("fifty_states") # this line is optional due to lazy data loading
+```
+
+## Load the data
+Load CDC data 
+Dataset: Underlying Cause of Death, 1999-2016
+
+### Load Monthly Data 
+
+Group By: State, Year, Month, ICD Chapter
+
+ICD-10 Codes: 
+
+* X40 (Accidental poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics)
+* X41 (Accidental poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified)
+* X42 (Accidental poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified)
+* X43 (Accidental poisoning by and exposure to other drugs acting on the autonomic nervous system)
+* X44 (Accidental poisoning by and exposure to other and unspecified drugs, medicaments and biological substances) 
+* X60 (Intentional self-poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics)
+* X61 (Intentional self-poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified)
+* X62 (Intentional self-poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified)
+* X63 (Intentional self-poisoning by and exposure to other drugs acting on the autonomic nervous system) 
+* X64 (Intentional self-poisoning by and exposure to other and unspecified drugs, medicaments and biological substances) 
+* Y10 (Poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics, undetermined intent) 
+* Y11 (Poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified, undetermined intent), 
+* Y12 (Poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified, undetermined intent)
+* Y13 (Poisoning by and exposure to other drugs acting on the autonomic nervous system, undetermined intent)
+* Y14 (Poisoning by and exposure to other and unspecified drugs, medicaments and biological substances, undetermined intent)
+
+Source: 
+
+Centers for Disease Control and Prevention, National Center for Health Statistics. Underlying Cause of Death 1999-2016 on CDC WONDER Online Database, released December, 2017. Data are from the Multiple Cause of Death Files, 1999-2016, as 
+ compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative Program. Accessed at http://wonder.cdc.gov/ucd-icd10.html on Feb 10, 2018 4:36:12 PM 
+
+* Note: Year, Month data for the state of South Dakota and North Dakota was unavailable due to CDC Suppression, data was inputed by floor (AnnualDeaths/ 12 ) for each year
+
+Use of this data allowed under https://wonder.cdc.gov/DataUse.html#
+
+CDC Data was generated from the following Query https://wonder.cdc.gov/controller/saved/D76/D29F799
+
+
+```{r loadmonthlydata, echo=FALSE}
+
+cdcMonthlyStateData        <- read_tsv("Data/statefull.txt")
+colnames(cdcMonthlyStateData) <- make.names(colnames(cdcMonthlyStateData)) # Set standard names (remove spaces, etc)
+cdcMonthlyStateData$Notes  <- cdcMonthlyStateData$Notes <- NULL
+cdcMonthlyStateData$Deaths <- as.integer(cdcMonthlyStateData$Deaths)
+cdcMonthlyStateData <- cdcMonthlyStateData %>% separate(Month.Code,c("yr","Month.Code"))
+cdcMonthlyStateData$Year<- as.character(cdcMonthlyStateData$Year)
+cdcMonthlyStateData$YearMonth <- paste(cdcMonthlyStateData$Year , cdcMonthlyStateData$Month.Code,sep="-")
+
+cdcMonthlyStateData <- cdcMonthlyStateData %>% select(
+  State,YearMonth,Year,Month.Code,Deaths)
+#save the RDS
+saveRDS(cdcMonthlyStateData,"Data/cdcMonthlyStateData.rds")
+
+
+```
+### Load Annual Data 
+
+Group By: State, Year, ICD Chapter
+
+ICD-10 Codes: 
+
+* X40 (Accidental poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics)
+* X41 (Accidental poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified)
+* X42 (Accidental poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified)
+* X43 (Accidental poisoning by and exposure to other drugs acting on the autonomic nervous system)
+* X44 (Accidental poisoning by and exposure to other and unspecified drugs, medicaments and biological substances) 
+* X60 (Intentional self-poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics)
+* X61 (Intentional self-poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified)
+* X62 (Intentional self-poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified)
+* X63 (Intentional self-poisoning by and exposure to other drugs acting on the autonomic nervous system) 
+* X64 (Intentional self-poisoning by and exposure to other and unspecified drugs, medicaments and biological substances) 
+* Y10 (Poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics, undetermined intent) 
+* Y11 (Poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not elsewhere classified, undetermined intent), 
+* Y12 (Poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not elsewhere classified, undetermined intent)
+* Y13 (Poisoning by and exposure to other drugs acting on the autonomic nervous system, undetermined intent)
+* Y14 (Poisoning by and exposure to other and unspecified drugs, medicaments and biological substances, undetermined intent)
+
+Source: 
+
+ Centers for Disease Control and Prevention, National Center for Health Statistics. Underlying Cause of Death"
+"1999-2016 on CDC WONDER Online Database, released December, 2017. Data are from the Multiple Cause of Death Files, 1999-2016, as"
+"compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative Program. Accessed"
+"at http://wonder.cdc.gov/ucd-icd10.html on Feb 13, 2018 11:26:09 AM"
+
+
+Use of this data allowed under https://wonder.cdc.gov/DataUse.html#
+
+CDC Data was generated from the following Query https://wonder.cdc.gov/controller/saved/D76/D29F799
+https://wonder.cdc.gov/controller/saved/D76/D30F044
+
+```{r loadAnnualdata, echo=FALSE}
+
+cdcAnnualData        <- read_tsv("Data/statefull_annual.txt")
+colnames(cdcAnnualData) <- make.names(colnames(cdcAnnualData)) # Set standard names (remove spaces, etc)
+cdcAnnualData$Notes  <- cdcAnnualData$Notes <- NULL
+cdcAnnualData$Year<- as.character(cdcAnnualData$Year)
+
+```
+## Load Geo data
+
+Latitudeo and Longitude  Coordinates for each state were downloaded from https://inkplant.com/code/state-latitudes-longitudes
+
+
+```{r loadGeoData, echo=FALSE}
+state.geom <- read.csv("Data/state_geom.csv")
+state.geom$name = as.character(state.geom$name)
+saveRDS(state.geom,"Data/state_geom.rds")
+
+# Join geocoordinates with CDC data
+
+
+cdcAnnualData <- left_join(cdcAnnualData,state.geom,by=c('State'='name'))
+cdcAnnualData <- cdcAnnualData %>% select(State,Year,Deaths,Population,Crude.Rate,Lat=latitude,Long=longitude)
+saveRDS(cdcAnnualData,"Data/cdcAnnualData.rds")
+cdcMonthlyStateData <- left_join(cdcMonthlyStateData,state.geom,by=c('State'='name'))
+cdcMonthlyStateData <- cdcMonthlyStateData %>% select(State,YearMonth,Year,Month.Code,Deaths,Lat=latitude,Long=longitude)
+
+```
+
+
+
+### Exploration 
+
+
+```{r exploreMonthly, echo=FALSE}
+str(cdcMonthlyStateData)
+head(cdcMonthlyStateData)
+
+summary(cdcMonthlyStateData)
+print("Deaths reported in 2016 ")
+print(cdcMonthlyStateData %>% filter(Year=="2016") %>% select(Deaths) %>%sum)
+print("Deaths reported in the state of Texas 2016 ")
+kable( cdcMonthlyStateData %>% filter(Year=="2016",State=="Texas") %>% select(Deaths) %>%sum)
+
+```
+
+```{r plottexas, echo=FALSE}
+grp_state <- cdcMonthlyStateData %>% group_by(State,YearMonth)%>% select(State,YearMonth,Deaths)
+
+tx <- filter(grp_state,State=="Texas")
+head(tx)
+
+
+ggplot(tx,aes(x=YearMonth, y=Deaths))+
+  geom_point()  +
+  ggtitle("Deaths attributed to opiods for the state of Texas","1999-2016")
+
+ggplot(tx,aes(x=YearMonth, y=Deaths,group=1))+
+  geom_line(stat="identity") +
+  stat_smooth(method='loess') +
+  ggtitle("Deaths attributed to opiods for the state of Texas","1999-2016")
+
+
+```
+
+
+```{r plottus, echo=FALSE}
+grp_us <- cdcAnnualData %>% group_by(Year)%>% select(Deaths) %>%summarise(Deaths= sum(Deaths))
+grp_us2 <- grp_us %>% arrange(desc(Year))  %>% mutate (PercentChange =  (Deaths-lead(Deaths)) * 100 / lead(Deaths))
+
+kable(grp_us2 %>% arrange(desc(Year)),format.args = list(decimal.mark = ".", big.mark = ","),caption="Deaths attributed to opiods in the United State")
+
+ggplot(grp_us,aes(x=Year, y=Deaths))+
+  geom_point()  +
+  ggtitle("Deaths attributed to opiods in the United States","1999-2016")
+
+ggplot(grp_us,aes(x=Year, y=Deaths,group=1))+
+  geom_line() +
+  stat_smooth(method="glm") +
+  ggtitle("Deaths attributed to opiods in the United States","1999-2016")
+
+
+
+```
+
+```{r plotmap, echo=FALSE}
+
+grp_state2 <-cdcAnnualData %>% filter(Year=="2016") %>%group_by(State)%>% summarise(Deaths= sum(Deaths)) %>% arrange(desc(Deaths))
+
+kable(head(grp_state2),format.args = list(decimal.mark = " ", big.mark = ","),caption="States with Highest number of deaths for 2016")
+kable(tail(grp_state2),format.args = list(decimal.mark = " ", big.mark = ","),caption="States with Lowest number of deaths for 2016")
+grp_state2$State <- tolower(grp_state2$State)
+p <- ggplot(grp_state2, aes(map_id = State)) + 
+  # map points to the fifty_states shape data
+  scale_fill_gradient(low="white", high="red")+
+# Diverging color scheme
+  geom_map(aes(fill = log10(Deaths)), map = fifty_states) +
+  
+  expand_limits(x = fifty_states$long, y = fifty_states$lat) +
+  coord_map() +
+  scale_x_continuous(breaks = NULL) + 
+  scale_y_continuous(breaks = NULL) +
+  labs(x = "", y = "") +
+  theme(legend.position = "bottom", 
+        panel.background = element_blank())
+
+
+p + fifty_states_inset_boxes() 
+
+```
+
+
+
+``` {r}
+sessionInfo(package = NULL)
+```
