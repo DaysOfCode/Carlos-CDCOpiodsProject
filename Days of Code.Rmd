@@ -6,7 +6,11 @@ output: html_document
 ---
 # Analysis of Opiod drug overdoses data from the CDC
 
+Carlos Santillan
 
+csantill@gmail.com
+
+https://www.linkedin.com/in/carlos-santillan/
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
