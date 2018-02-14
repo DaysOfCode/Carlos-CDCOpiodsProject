@@ -126,6 +126,15 @@ colnames(cdcAnnualData) <- make.names(colnames(cdcAnnualData)) # Set standard na
 cdcAnnualData$Notes  <- cdcAnnualData$Notes <- NULL
 cdcAnnualData$Year<- as.character(cdcAnnualData$Year)
 
+cdcAnnualData <- cdcAnnualData %>% select(State,Year,Deaths,Population,Crude.Rate)
+
+# Calculate the US totals
+us_agg_data <- cdcAnnualData %>% group_by(Year)  %>% summarise(Deaths=sum(Deaths), Population = sum(Population),Crude.Rate = (sum(Deaths) / sum(Population)) * 100000)
+us_agg_data ["State"] <- "US Aggregated"
+
+
+cdcAnnualData <- cdcAnnualData %>% rbind(us_agg_data)
+
 ```
 ## Load Geo data
 
@@ -177,7 +186,7 @@ ggplot(tx,aes(x=YearMonth, y=Deaths,group=1))+
 
 
 ```{r plottus, echo=FALSE}
-grp_us <- cdcAnnualData %>% group_by(Year)%>% select(Deaths) %>%summarise(Deaths= sum(Deaths))
+grp_us <- cdcAnnualData %>% group_by(Year)%>% select(Year,Deaths) %>%summarise(Deaths= sum(Deaths))
 grp_us2 <- grp_us %>% arrange(desc(Year))  %>% mutate (PercentChange =  (Deaths-lead(Deaths)) * 100 / lead(Deaths))
 
 kable(grp_us2 %>% arrange(desc(Year)),format.args = list(decimal.mark = ".", big.mark = ","),caption="Deaths attributed to opiods in the United State")

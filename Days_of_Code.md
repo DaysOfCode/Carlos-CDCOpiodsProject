@@ -231,8 +231,6 @@ Latitudeo and Longitude Coordinates for each state were downloaded from
 
 ![](Days_of_Code_files/figure-markdown_strict/plottexas-1.png)![](Days_of_Code_files/figure-markdown_strict/plottexas-2.png)
 
-    ## Adding missing grouping variables: `Year`
-
 <table>
 <caption>Deaths attributed to opiods in the United State</caption>
 <thead>
@@ -245,92 +243,92 @@ Latitudeo and Longitude Coordinates for each state were downloaded from
 <tbody>
 <tr class="odd">
 <td align="left">2016</td>
-<td align="right">63,522</td>
+<td align="right">127,044</td>
 <td align="right">21.4314389</td>
 </tr>
 <tr class="even">
 <td align="left">2015</td>
-<td align="right">52,311</td>
+<td align="right">104,622</td>
 <td align="right">11.3616043</td>
 </tr>
 <tr class="odd">
 <td align="left">2014</td>
-<td align="right">46,974</td>
+<td align="right">93,948</td>
 <td align="right">7.0120284</td>
 </tr>
 <tr class="even">
 <td align="left">2013</td>
-<td align="right">43,896</td>
+<td align="right">87,792</td>
 <td align="right">5.9726715</td>
 </tr>
 <tr class="odd">
 <td align="left">2012</td>
-<td align="right">41,422</td>
+<td align="right">82,844</td>
 <td align="right">0.3926321</td>
 </tr>
 <tr class="even">
 <td align="left">2011</td>
-<td align="right">41,260</td>
+<td align="right">82,520</td>
 <td align="right">7.8213604</td>
 </tr>
 <tr class="odd">
 <td align="left">2010</td>
-<td align="right">38,267</td>
+<td align="right">76,534</td>
 <td align="right">3.6091406</td>
 </tr>
 <tr class="even">
 <td align="left">2009</td>
-<td align="right">36,934</td>
+<td align="right">73,868</td>
 <td align="right">1.5172338</td>
 </tr>
 <tr class="odd">
 <td align="left">2008</td>
-<td align="right">36,382</td>
+<td align="right">72,764</td>
 <td align="right">1.2044841</td>
 </tr>
 <tr class="even">
 <td align="left">2007</td>
-<td align="right">35,949</td>
+<td align="right">71,898</td>
 <td align="right">4.6550218</td>
 </tr>
 <tr class="odd">
 <td align="left">2006</td>
-<td align="right">34,350</td>
+<td align="right">68,700</td>
 <td align="right">15.4389031</td>
 </tr>
 <tr class="even">
 <td align="left">2005</td>
-<td align="right">29,756</td>
+<td align="right">59,512</td>
 <td align="right">8.7891196</td>
 </tr>
 <tr class="odd">
 <td align="left">2004</td>
-<td align="right">27,352</td>
+<td align="right">54,704</td>
 <td align="right">6.2750126</td>
 </tr>
 <tr class="even">
 <td align="left">2003</td>
-<td align="right">25,737</td>
+<td align="right">51,474</td>
 <td align="right">9.6357827</td>
 </tr>
 <tr class="odd">
 <td align="left">2002</td>
-<td align="right">23,475</td>
+<td align="right">46,950</td>
 <td align="right">21.3052914</td>
 </tr>
 <tr class="even">
 <td align="left">2001</td>
-<td align="right">19,352</td>
+<td align="right">38,704</td>
 <td align="right">11.3207547</td>
 </tr>
 <tr class="odd">
 <td align="left">2000</td>
-<td align="right">17,384</td>
+<td align="right">34,768</td>
 <td align="right">3.4207865</td>
 </tr>
 <tr class="even">
 <td align="left">1999</td>
-<td align="right">16,809</td>
+<td align="right">33,618</td>
 <td align="right">NA</td>
 </tr>
 </tbody>
@@ -348,28 +346,28 @@ Latitudeo and Longitude Coordinates for each state were downloaded from
 </thead>
 <tbody>
 <tr class="odd">
+<td align="left">US Aggregated</td>
+<td align="right">63,522</td>
+</tr>
+<tr class="even">
 <td align="left">Florida</td>
 <td align="right">4,724</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">California</td>
 <td align="right">4,649</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Pennsylvania</td>
 <td align="right">4,609</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Ohio</td>
 <td align="right">4,318</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">New York</td>
 <td align="right">3,636</td>
-</tr>
-<tr class="even">
-<td align="left">Texas</td>
-<td align="right">2,822</td>
 </tr>
 </tbody>
 </table>
