@@ -2,7 +2,7 @@
 title: "Days of Code Austin 2018"
 author: "Carlos Santillan"
 date: "February 10, 2018"
-output: html_document
+output:   md_document
 ---
 # Analysis of Opiod drug overdoses data from the CDC
 
