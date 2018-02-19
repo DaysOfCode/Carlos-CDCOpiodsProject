@@ -36,6 +36,8 @@ navbarPage(
         h2("CDC"),
         selectInput("year", "Year", Years, selected ="2016"),
         selectInput("monthlyState", "State", States, selected ="Texas"),
+        selectInput("choropleth", "Choropleth", c("PercentChange","Crude.Rate"), selected ="2016"),
+        
         plotOutput("scatterDeaths", height = 300)
       ),
       
@@ -62,7 +64,9 @@ navbarPage(
     )),
 
     hr(),
-    plotOutput("scatterExplorerStateDeaths", height = 300),
+    plotOutput("scatterExplorerStateRate", height = 400),
+    hr(),
+    plotOutput("scatterExplorerStateDeaths", height = 300),    
     hr(),
     DT::dataTableOutput("cdcStatetable")
     
